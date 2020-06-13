@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, flash
 from flask_login import LoginManager, login_user, logout_user, current_user
 
 from forms import *
@@ -32,6 +32,8 @@ def index():
         user = User(username=username, password=hashed_password)
         db.session.add(user)
         db.session.commit()
+
+        flash("You have registered successfully!", "success")
         return redirect(url_for('login'))
     return render_template("index.html", form=reg_form)
 
@@ -42,6 +44,8 @@ def login():
     if login_form.validate_on_submit():
         user_object = User.query.filter_by(username=login_form.username.data).first()
         login_user(user_object)
+
+        flash("Logged in successfully!", "success")
         return redirect(url_for('chat'))
 
     return render_template("login.html", form=login_form)
@@ -50,7 +54,8 @@ def login():
 def chat():
 
     if not current_user.is_authenticated:
-        return "Please login before trying to access this page"
+        flash("Please login before accessing this page!", "danger")
+        return redirect(url_for('login'))
 
     return "Ping Me!"
 
@@ -58,7 +63,8 @@ def chat():
 def logout():
 
     logout_user()
-    return "Logged you out! Goodbye!"
+    flash("Logged you out! Goodbye!", "success")
+    return redirect(url_for('login'))
 
 
 if __name__ == "__main__":
