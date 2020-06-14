@@ -1,25 +1,23 @@
-{% from "form_helper.html" import displayField %}
-
+{% from 'field-macro.html' import displayField %}
 {% extends "prelogin-layout.html" %}
 
-{% block title %}Registration{% endblock %}
+{% block title %}Register {% endblock title%}
 
 {% block content %}
-<h1>Get Started</h1>
-<form action="{{ url_for('index') }}", method="POST">
+        <h2>Get started!</h2>
+        <p>First time here? Register to start using PingMe!</p>
 
-<div>
-  {{ displayField(fieldname=form.username, placeholdervalue="Username", autocomplete="off", autofocus=true) }}
-  {{ displayField(fieldname=form.password, placeholdervalue="Password") }}
-  {{ displayField(fieldname=form.confirm_pswd, placeholdervalue="Retype Password") }}
-</div>
+        <form action="{{ url_for('index') }}", method="POST">
+            {{ displayField(form.username, 'Username', autocomplete="off", autofocus=true) }}
+            {{ displayField(form.password, 'Password') }}
+            {{ displayField(form.confirm_pswd, 'Retype Password') }}
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-warning">
+            </div>
+            {{ form.csrf_token }}
+        </form>
 
+        <hr>
 
-  <div>
-      {{ form.submit_button }}
-  </div>
-
-  {{ form.csrf_token }}
-
-</form>
+        <p>Already registered? <a href={{url_for('login')}}>Login here</a>.</p>
 {% endblock %}
