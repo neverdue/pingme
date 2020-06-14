@@ -1,3 +1,5 @@
+import os
+
 from time import localtime, strftime
 from flask import Flask, render_template, redirect, url_for, flash
 from flask_login import LoginManager, login_user, logout_user, current_user
@@ -6,17 +8,19 @@ from flask_socketio import SocketIO, send, emit, join_room, leave_room
 from forms import *
 from models import *
 
-
+# Configure app
 app = Flask(__name__)
-app.secret_key = "replace this"
+app.secret_key = os.environ.get('SECRET')
 
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://oyeubcfprgkknv:61c161ce0a9f0a2591792d4443083dd3f8e5e24ff3c68ca012b456698623c84e@ec2-34-193-117-204.compute-1.amazonaws.com:5432/d880fut9ik2j31"
+# Configure database
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 db = SQLAlchemy(app)
 
+# Initialize Flask-SocketIO
 socketio = SocketIO(app)
 ROOMS = ["lounge", "news", "meme", "games"]
 
-
+# Configure Flask Login
 login = LoginManager(app)
 login.init_app(app)
 
@@ -90,4 +94,4 @@ def leave(data):
     send({'msg': data['username'] + " has left the " + data['room']+ " room"}, room=data['room'])
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True)
+    app.run()
