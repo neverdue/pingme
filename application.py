@@ -10,10 +10,10 @@ from models import *
 
 # Configure app
 app = Flask(__name__)
-app.secret_key = "dwedwewdewdewd"
+app.secret_key = os.environ.get('SECRET')
 
 # Configure database
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://oyeubcfprgkknv:61c161ce0a9f0a2591792d4443083dd3f8e5e24ff3c68ca012b456698623c84e@ec2-34-193-117-204.compute-1.amazonaws.com:5432/d880fut9ik2j31"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
