@@ -14,6 +14,7 @@ def invalid_credentials(form, field):
 
     # Check username is invalid
     user_data = User.query.filter_by(username=username).first()
+    db.session.close()
     if user_data is None:
         raise ValidationError("Username or password is incorrect")
 
@@ -31,6 +32,7 @@ class RegistrationForm(FlaskForm):
 
     def validate_username(self, username):
         user_object = User.query.filter_by(username=username.data).first()
+        db.session.close()
         if user_object:
             raise ValidationError("Username already exists. Select a different username.")
 

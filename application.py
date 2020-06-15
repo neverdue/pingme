@@ -16,7 +16,6 @@ app.secret_key = os.environ.get('SECRET')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
-engine = create_engine('postgresql+psycopg2://scott:tiger@localhost/mydatabase')
 
 # Initialize login manager
 login = LoginManager(app)
@@ -65,6 +64,7 @@ def login():
     if login_form.validate_on_submit():
         user_object = User.query.filter_by(username=login_form.username.data).first()
         login_user(user_object)
+        db.session.close()
         return redirect(url_for('chat'))
 
     return render_template("login.html", form=login_form)
