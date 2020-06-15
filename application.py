@@ -14,8 +14,9 @@ app.secret_key = os.environ.get('SECRET')
 
 # Configure database
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
+engine = create_engine('postgresql+psycopg2://scott:tiger@localhost/mydatabase')
 
 # Initialize login manager
 login = LoginManager(app)
