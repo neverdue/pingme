@@ -75,7 +75,7 @@ def logout():
     # Logout user
     logout_user()
     flash('You have logged out successfully', 'success')
-    db.session.close()
+    os.system("heroku pg:killall -a pingmeapplication")
     return redirect(url_for('login'))
 
 
