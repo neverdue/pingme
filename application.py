@@ -13,8 +13,7 @@ init_db()
 
 # Configure app
 app = Flask(__name__)
-# app.secret_key = os.environ.get('SECRET')
-app.secret_key = 'fsafdsafadsfsaf'
+app.secret_key = os.environ.get('SECRET')
 
 # Configure database
 # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
