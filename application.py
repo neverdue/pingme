@@ -4,18 +4,22 @@ from time import localtime, strftime
 from flask import Flask, render_template, redirect, url_for, flash
 from flask_login import LoginManager, login_user, logout_user, current_user
 from flask_socketio import SocketIO, send, emit, join_room, leave_room
+from create import db_session, init_db
 
 from wtform_fields import *
 from models import *
 
+init_db()
+
 # Configure app
 app = Flask(__name__)
-app.secret_key = os.environ.get('SECRET')
+# app.secret_key = os.environ.get('SECRET')
+app.secret_key = 'fsafdsafadsfsaf'
 
 # Configure database
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-db = SQLAlchemy(app)
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+# db = SQLAlchemy(app)
 
 # Initialize login manager
 login = LoginManager(app)
@@ -46,8 +50,8 @@ def index():
 
         # Add username & hashed password to DB
         user = User(username=username, hashed_pswd=hashed_pswd)
-        db.session.add(user)
-        db.session.commit()
+        db_session.add(user)
+        db_session.commit()
 
         flash('Registered successfully. Please login.', 'success')
         return redirect(url_for('login'))
@@ -75,7 +79,6 @@ def logout():
     # Logout user
     logout_user()
     flash('You have logged out successfully', 'success')
-    os.system("heroku pg:killall -a pingmeapplication")
     return redirect(url_for('login'))
 
 
@@ -93,6 +96,10 @@ def chat():
 def page_not_found(e):
     # note that we set the 404 status explicitly
     return render_template('404.html'), 404
+
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db_session.remove()
 
 
 @socketio.on('incoming-msg')
