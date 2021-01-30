@@ -18,6 +18,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#user_message').value = '';
     };
 
+    socket.on('connection', () => {
+      socket.send("I am connected");
+      console.log('Client connected');
+    });
+
     // Display all incoming messages
     socket.on('message', data => {
 
